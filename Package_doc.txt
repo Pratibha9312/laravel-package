@@ -1,0 +1,176 @@
+BWE Livewire Datatables
+Package Documentation
+
+A reusable Laravel Livewire package for building dynamic datatables with search, sorting, and pagination.
+
+Overview-----
+
+This package provides a fully dynamic datatable system that works with:
+Database tables
+Query Builder
+Any Laravel project
+
+It is built using Livewire 3 and designed to be:
+Lightweight
+Reusable
+Framework-friendly
+Easy to integrate
+ 
+Architecture --
+The package follows this flow:
+Controller → Blade View → Livewire Component → Query Builder → Rendered Table
+
+Requirements --
+Laravel 11+
+Livewire 3+
+PHP 8.1+
+
+Installation--
+
+Install the package via Composer:
+	composer require vendor/bwe-livewire-datatables
+
+Setup Livewire --
+	Add Livewire assets in your main layout file:
+
+		<head>
+				@livewireStyles
+		</head>
+
+		<body>
+
+				{{ $slot ?? '' }}
+
+				@livewireScripts
+		</body>
+		
+How It Works --
+
+The package follows this flow:
+Controller → Blade View → Livewire Component → Database Query → Rendered Table
+
+Responsibilities:
+Controller → defines column configuration
+Blade → passes data to component
+Livewire → handles logic (search, sort, pagination)
+Database → provides data
+
+Usage
+Step 1: Define Columns in Controller
+namespace App\Http\Controllers;
+
+class DataTableController extends Controller
+{
+    public function users()
+    {
+        $columns = [
+            [
+                'field' => 'id',
+                'label' => 'ID',
+                'sortable' => true,
+            ],
+            [
+                'field' => 'name',
+                'label' => 'Name',
+                'sortable' => true,
+                'searchable' => true,
+            ],
+            [
+                'field' => 'email',
+                'label' => 'Email',
+                'searchable' => true,
+            ],
+        ];
+
+        return view('datatable-test', compact('columns'));
+    }
+}
+Step 2: Define Route
+
+	use App\Http\Controllers\DataTableController;
+
+	Route::get('/datatable-test', [DataTableController::class, 'users']);
+
+
+Step 3: Use Component in Blade
+
+	<livewire:data-table
+			table="users"
+			:columns="$columns"
+	/>
+
+
+Column Configuration
+
+	Each column supports:
+
+	[
+			'field' => 'column_name',  // database column
+			'label' => 'Label',        // display name
+			'searchable' => true,      // optional
+			'sortable' => true,        // optional
+	]
+
+
+Features
+ 1.Search- Global search across searchable columns, Case-insensitive matching
+ 2.Sorting - Click column header to sort, Toggle ASC / DESC order
+ 3.Pagination - Server-side pagination, Default 10 records per page
+ 4.Maintains state (search + sort)
+ 
+ 
+Internal Working --
+	Receives table name or query
+	Applies search filters
+	Applies sorting
+	Applies pagination
+	Returns Livewire-rendered view
+	
+	
+Example Usage --
+	@php
+	$columns = [
+			['field' => 'id', 'label' => 'ID'],
+			['field' => 'name', 'label' => 'Name', 'searchable' => true],
+			['field' => 'email', 'label' => 'Email', 'searchable' => true],
+	];
+	@endphp
+
+	<livewire:data-table
+			table="users"
+			:columns="$columns"
+	/>
+	
+	
+Use Cases --
+	Admin dashboards
+	CRM systems
+	Reporting tools
+	Data management panels
+	Internal admin tools
+	
+	
+Design Principles
+
+This package follows:
+
+ 1.Separation of Concerns
+		Controller → configuration
+		Livewire → logic
+		Blade → UI
+ 2.Reusability
+		Works with any table
+		No Eloquent dependency
+ 3.Simplicity
+		Minimal setup
+		Clean API
+
+
+Future Improvements --
+	Better UI
+	Action buttons (edit/delete/view)
+	Column formatting callbacks
+	Filters (date, status, dropdown)
+	Export CSV / Excel
+	Bulk actions
+	Column visibility toggle
