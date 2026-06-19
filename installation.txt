@@ -1,0 +1,91 @@
+BWE Livewire Datatables — Installation & Usage Guide
+A reusable Laravel package that provides dynamic, framework-agnostic datatables using Livewire.
+
+
+Requirements
+Laravel 11+
+Livewire 3
+PHP 8.1+
+
+
+Installation
+1.Install via composer
+	composer require vendor/bwe-livewire-datatables
+
+2.Add Livewire assets in layout
+In your main layout file (e.g. resources/views/layouts/app.blade.php or welcome.blade.php):
+
+<head>
+    @livewireStyles
+</head>
+
+<body>
+
+    {{ $slot ?? '' }}
+
+    @livewireScripts
+</body>
+
+4.Register Service Provider (ONLY if needed)
+
+Usually Laravel auto-discovers it.
+
+If not, add in:
+
+config/app.php
+BweLivewireDatatables\DataTableServiceProvider::class,
+
+5.Create controller
+Defines columns that you want to show, and add sortable and searchable according to you.
+namespace App\Http\Controllers;
+
+class DataTableController extends Controller
+{
+    public function users()
+    {
+        $columns = [
+            [
+                'field' => 'id',
+                'label' => 'ID',
+                'sortable' => true,
+            ],
+            [
+                'field' => 'name',
+                'label' => 'Name',
+                'sortable' => true,
+                'searchable' => true,
+            ],
+            [
+                'field' => 'email',
+                'label' => 'Email',
+                'searchable' => true,
+            ],
+        ];
+
+        return view('datatable-test', compact('columns'));
+    }
+}
+
+6.Define Route
+
+7.Use Component in Blade
+	Add given code in the view where route is directing to:
+	<livewire:data-table
+    table="users"
+    :columns="$columns"
+/>
+
+
+How It Works
+
+This package follows a simple flow:
+
+Controller → Blade View → Livewire Component → Database Query → UI Render
+
+Controller defines columns configuration
+Blade passes data to Livewire
+Livewire handles:
+1.search
+2.sorting
+3.pagination
+Component renders final table

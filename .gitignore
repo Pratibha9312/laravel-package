@@ -1,0 +1,4 @@
+datatable-demo/vendor
+datatable-demo/node_modules
+datatable-demo/.env
+datatable-demo/storage/logs
